@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VNCE COLLECTIVE | Coastal Archives</title>
+    <!-- Google tag (gtag.js) – kept from GoSeeDo for analytics if you wish -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-67JSB4DKB6"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-67JSB4DKB6');
+    </script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Serif+Display:ital@1&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -38,6 +47,9 @@
             --font-mono: 'JetBrains Mono', monospace;
             --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             --transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            /* Accent for local events – a softer teal */
+            --local-teal: #4a8c8f;
+            --local-teal-soft: rgba(74, 140, 143, 0.15);
         }
 
         html { scroll-behavior: smooth; }
@@ -75,6 +87,7 @@
         .orb-1 { width: 50vw; height: 50vw; background: rgba(232, 40, 79, 0.25); top: -10%; left: -10%; }
         .orb-2 { width: 40vw; height: 40vw; background: rgba(0, 119, 170, 0.2); bottom: -10%; right: -5%; animation-delay: -5s; }
         .orb-3 { width: 45vw; height: 45vw; background: rgba(240, 90, 40, 0.15); top: 30%; left: 40%; animation-delay: -9s; }
+        .orb-4 { width: 30vw; height: 30vw; background: rgba(74, 140, 143, 0.2); bottom: 15%; left: 5%; animation-delay: -13s; }
         @keyframes float {
             0% { transform: translate(0, 0) scale(1); }
             100% { transform: translate(8%, 12%) scale(1.1); }
@@ -132,45 +145,14 @@
             cursor: default;
             min-width: 140px;
         }
-        .nav-weather .weather-icon {
-            font-size: 1.6rem;
-            line-height: 1;
-        }
-        .nav-weather .weather-temp {
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-        }
-        .nav-weather .weather-desc {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            opacity: 0.6;
-            margin-top: -2px;
-        }
-        .nav-weather .weather-forecast {
-            display: flex;
-            gap: 10px;
-            margin-left: 4px;
-            align-items: center;
-        }
-        .nav-weather .forecast-day {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.55rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            opacity: 0.7;
-            line-height: 1.2;
-        }
+        .nav-weather .weather-icon { font-size: 1.6rem; line-height: 1; }
+        .nav-weather .weather-temp { font-size: 1rem; font-weight: 600; letter-spacing: 0.02em; }
+        .nav-weather .weather-desc { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.6; margin-top: -2px; }
+        .nav-weather .weather-forecast { display: flex; gap: 10px; margin-left: 4px; align-items: center; }
+        .nav-weather .forecast-day { display: flex; flex-direction: column; align-items: center; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.7; line-height: 1.2; }
         .nav-weather .forecast-day .day-icon { font-size: 1.1rem; }
         .nav-weather .forecast-day .day-temp { font-weight: 600; font-size: 0.6rem; }
-        .nav-weather .forecast-divider {
-            width: 1px;
-            height: 24px;
-            background: rgba(0, 0, 0, 0.1);
-        }
+        .nav-weather .forecast-divider { width: 1px; height: 24px; background: rgba(0, 0, 0, 0.1); }
         @media (max-width: 991.98px) {
             .nav-weather .weather-forecast { display: none; }
             .nav-weather .weather-desc { display: none; }
@@ -460,6 +442,7 @@
             background: linear-gradient(135deg, var(--venice-pink) 0%, #ff7a95 100%);
             -webkit-background-clip: text;
             background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .hero-content p { color: rgba(255, 255, 255, 0.75); }
         .hero-content .btn-studio {
@@ -1244,6 +1227,8 @@
         .badge-festival { background: rgba(124, 58, 237, 0.12); color: #7c3aed; border: 1px solid rgba(124, 58, 237, 0.25); }
         .badge-special { background: rgba(22, 163, 74, 0.12); color: #15803d; border: 1px solid rgba(22, 163, 74, 0.25); }
         .badge-music { background: rgba(30, 64, 175, 0.12); color: #1d4ed8; border: 1px solid rgba(30, 64, 175, 0.25); }
+        /* Local events badge */
+        .badge-local { background: var(--local-teal-soft); color: var(--local-teal); border: 1px solid rgba(74, 140, 143, 0.3); }
         .hub-card h3 {
             font-family: var(--font-display);
             font-size: 1.1rem;
@@ -1776,6 +1761,95 @@
             letter-spacing: 0.05em;
         }
 
+        /* ─── LOCAL EVENTS SECTION ─── */
+        .local-events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px;
+        }
+        .local-event-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 28px 24px;
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            border-left: 4px solid var(--local-teal);
+        }
+        .local-event-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.85);
+        }
+        .local-event-card .event-category {
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--local-teal);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .local-event-card h4 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
+        .local-event-card .event-desc {
+            font-size: 0.85rem;
+            color: rgba(13, 13, 13, 0.65);
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 16px;
+        }
+        .local-event-card .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .local-event-card .event-meta span {
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: rgba(13, 13, 13, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .local-event-card .event-action {
+            margin-top: auto;
+        }
+        .local-event-card .event-action .btn-local {
+            background: var(--local-teal);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-family: var(--font-display);
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: var(--transition-fast);
+            cursor: pointer;
+        }
+        .local-event-card .event-action .btn-local:hover {
+            background: #3a7073;
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(74, 140, 143, 0.3);
+        }
+
         /* ─── STAGGER ANIMATIONS ─── */
         .stagger-grid>* {
             opacity: 0;
@@ -1917,6 +1991,26 @@
         .music-section.revealed-section .music-carousel-item:nth-child(4) { transition-delay: 0.50s; }
         .music-section.revealed-section .music-carousel-item:nth-child(5) { transition-delay: 0.55s; }
         .music-section.revealed-section .music-carousel-item:nth-child(6) { transition-delay: 0.60s; }
+
+        /* local events stagger */
+        .local-events-grid>* {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .revealed-section .local-events-grid>* {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .revealed-section .local-events-grid>*:nth-child(1) { transition-delay: 0.05s; }
+        .revealed-section .local-events-grid>*:nth-child(2) { transition-delay: 0.10s; }
+        .revealed-section .local-events-grid>*:nth-child(3) { transition-delay: 0.15s; }
+        .revealed-section .local-events-grid>*:nth-child(4) { transition-delay: 0.20s; }
+        .revealed-section .local-events-grid>*:nth-child(5) { transition-delay: 0.25s; }
+        .revealed-section .local-events-grid>*:nth-child(6) { transition-delay: 0.30s; }
+        .revealed-section .local-events-grid>*:nth-child(7) { transition-delay: 0.35s; }
+        .revealed-section .local-events-grid>*:nth-child(8) { transition-delay: 0.40s; }
     </style>
 </head>
 <body>
@@ -1926,11 +2020,12 @@
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
     </div>
 
     <!-- ─── STICKY NAV ─── -->
     <nav class="sticky-nav" id="stickyNav">
-        <!-- Weather widget - dynamically populated via JavaScript -->
+        <!-- Weather widget -->
         <div class="nav-weather" id="navWeather">
             <span class="weather-icon" id="weatherIcon">🌊</span>
             <div>
@@ -1959,6 +2054,7 @@
             <a href="#schedule">Schedule</a>
             <a href="#map">Map</a>
             <a href="#events-hub">Events</a>
+            <a href="#local-events">Local</a>
             <a href="#neighborhoods">Explore</a>
             <a href="#music">Music</a>
             <a href="#artists">Artists</a>
@@ -1985,6 +2081,7 @@
             <a href="#schedule" class="text-decoration-none" style="font-family:var(--font-display);font-size:2.2rem;font-weight:700;text-transform:uppercase;color:var(--charcoal);letter-spacing:-0.03em;" onclick="closeMenu()">Schedule</a>
             <a href="#map" class="text-decoration-none" style="font-family:var(--font-display);font-size:2.2rem;font-weight:700;text-transform:uppercase;color:var(--charcoal);letter-spacing:-0.03em;" onclick="closeMenu()">Map</a>
             <a href="#events-hub" class="text-decoration-none" style="font-family:var(--font-display);font-size:2.2rem;font-weight:700;text-transform:uppercase;color:var(--charcoal);letter-spacing:-0.03em;" onclick="closeMenu()">Events</a>
+            <a href="#local-events" class="text-decoration-none" style="font-family:var(--font-display);font-size:2.2rem;font-weight:700;text-transform:uppercase;color:var(--charcoal);letter-spacing:-0.03em;" onclick="closeMenu()">Local</a>
             <a href="#neighborhoods" class="text-decoration-none" style="font-family:var(--font-display);font-size:2.2rem;font-weight:700;text-transform:uppercase;color:var(--charcoal);letter-spacing:-0.03em;" onclick="closeMenu()">Explore</a>
             <a href="#music" class="text-decoration-none" style="font-family:var(--font-display);font-size:2.2rem;font-weight:700;text-transform:uppercase;color:var(--charcoal);letter-spacing:-0.03em;" onclick="closeMenu()">Music</a>
             <a href="#artists" class="text-decoration-none" style="font-family:var(--font-display);font-size:2.2rem;font-weight:700;text-transform:uppercase;color:var(--charcoal);letter-spacing:-0.03em;" onclick="closeMenu()">Artists</a>
@@ -2006,6 +2103,7 @@
             <a href="#schedule">SCHEDULE</a>
             <a href="#map">MAP</a>
             <a href="#events-hub">EVENTS</a>
+            <a href="#local-events">LOCAL</a>
             <a href="#neighborhoods">EXPLORE</a>
             <a href="#music">MUSIC</a>
             <a href="#instructors">CLASSES</a>
@@ -2042,7 +2140,7 @@
                 <p>Live reports where the pavement hits the breakwater. Documenting authentic local energy, underground sounds, and neighborhood setups across the coast.</p>
                 <div class="d-flex gap-3 flex-wrap">
                     <a href="#events-hub" class="btn-studio">Enter the Dispatch</a>
-                    <a href="#neighborhoods" class="btn-studio btn-studio-secondary">Explore Venice</a>
+                    <a href="#local-events" class="btn-studio btn-studio-secondary">Local Events</a>
                 </div>
             </div>
         </header>
@@ -2192,6 +2290,127 @@
                 <div class="hub-card"><div class="hub-card-header"><div class="hub-header-icon">TH</div><div class="hub-header-accent"></div></div><div class="hub-card-body"><span class="hub-badge badge-music">Live Music</span><h3>Townhouse Live Sessions</h3><button class="btn-studio w-100 mt-auto">View Event</button></div></div>
                 <div class="hub-card"><div class="hub-card-header"><div class="hub-header-icon">WLD</div><div class="hub-header-accent"></div></div><div class="hub-card-body"><span class="hub-badge badge-music">Tour Event</span><h3>VNCE World Tour Series</h3><button class="btn-studio w-100 mt-auto">Explore</button></div></div>
                 <div class="hub-card"><div class="hub-card-header"><div class="hub-header-icon">S19</div><div class="hub-header-accent"></div></div><div class="hub-card-body"><span class="hub-badge badge-music">Live Performance</span><h3>Season 19 Featured Artists</h3><button class="btn-studio w-100 mt-auto">See Lineup</button></div></div>
+            </div>
+        </section>
+
+        <!-- ═══════ ★ NEW: LOCAL EVENTS SECTION ★ ─═══════ -->
+        <section class="editorial-section section-chalk" id="local-events">
+            <span class="section-tag" style="color: var(--local-teal);">Curated Westside</span>
+            <h2 class="sec-h2 mb-2" style="background: linear-gradient(135deg, var(--local-teal), #3a7073); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Local Events</h2>
+            <p class="sec-lead">Handpicked happenings, markets, classes, and gatherings from the neighborhoods that make the Westside hum.</p>
+
+            <div class="local-events-grid">
+                <!-- Event 1 -->
+                <div class="local-event-card">
+                    <span class="event-category">🌿 Market</span>
+                    <h4>Rose Ave Farmers Market</h4>
+                    <div class="event-desc">Every Saturday morning, Rose Ave turns into a vibrant hub of organic produce, fresh flowers, and local food trucks. Bring your tote bag.</div>
+                    <div class="event-meta">
+                        <span>📅 Sat 8:00–1:00</span>
+                        <span>📍 Rose Ave &amp; Main St</span>
+                    </div>
+                    <div class="event-action">
+                        <button class="btn-local" onclick="displayModal('Rose Ave Farmers Market','Every Saturday from 8am–1pm. Fresh produce, artisanal goods, and community vibes.')">More Info</button>
+                    </div>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="local-event-card">
+                    <span class="event-category">🧘 Wellness</span>
+                    <h4>Salty Somatics Beach Yoga</h4>
+                    <div class="event-desc">Start your day with a grounding flow on Windward Beach. All levels welcome. Mats available for rent.</div>
+                    <div class="event-meta">
+                        <span>📅 Sun 9:00 AM</span>
+                        <span>📍 Windward Beach</span>
+                    </div>
+                    <div class="event-action">
+                        <button class="btn-local" onclick="displayModal('Salty Somatics Beach Yoga','Weekly Sunday morning session. Donation-based. Meet at the volleyball courts.')">More Info</button>
+                    </div>
+                </div>
+
+                <!-- Event 3 -->
+                <div class="local-event-card">
+                    <span class="event-category">🎨 Art Walk</span>
+                    <h4>Abbot Kinney First Fridays</h4>
+                    <div class="event-desc">Gallery openings, pop‑up shops, and live music along the mile. The street comes alive with creativity every first Friday.</div>
+                    <div class="event-meta">
+                        <span>📅 First Fri 6:00–10:00</span>
+                        <span>📍 Abbot Kinney Blvd</span>
+                    </div>
+                    <div class="event-action">
+                        <button class="btn-local" onclick="displayModal('Abbot Kinney First Fridays','Monthly art walk with extended hours at galleries, boutiques, and eateries.')">More Info</button>
+                    </div>
+                </div>
+
+                <!-- Event 4 -->
+                <div class="local-event-card">
+                    <span class="event-category">🏄 Surf</span>
+                    <h4>Venice Surf Co. Group Lesson</h4>
+                    <div class="event-desc">Beginner and intermediate group surf lessons at the Breakwater. All gear provided. Small groups for personalized coaching.</div>
+                    <div class="event-meta">
+                        <span>📅 Daily 7:00 AM</span>
+                        <span>📍 Breakwater Beach</span>
+                    </div>
+                    <div class="event-action">
+                        <button class="btn-local" onclick="displayModal('Venice Surf Co. Group Lesson','Daily group lessons. Sign up online. Equipment included.')">More Info</button>
+                    </div>
+                </div>
+
+                <!-- Event 5 -->
+                <div class="local-event-card">
+                    <span class="event-category">🎵 Live Music</span>
+                    <h4>Townhouse Sunday Sessions</h4>
+                    <div class="event-desc">Intimate live performances every Sunday evening at the historic Townhouse Venice. Local jazz, folk, and indie artists.</div>
+                    <div class="event-meta">
+                        <span>📅 Sun 7:00 PM</span>
+                        <span>📍 Townhouse Venice</span>
+                    </div>
+                    <div class="event-action">
+                        <button class="btn-local" onclick="displayModal('Townhouse Sunday Sessions','Weekly live music at the Townhouse. No cover. All ages until 9pm.')">More Info</button>
+                    </div>
+                </div>
+
+                <!-- Event 6 -->
+                <div class="local-event-card">
+                    <span class="event-category">🏃 Run Club</span>
+                    <h4>Boardwalk Run Club</h4>
+                    <div class="event-desc">Meet at Muscle Beach for a 5k loop along the boardwalk. All paces welcome. Coffee and camaraderie after.</div>
+                    <div class="event-meta">
+                        <span>📅 Mon/Wed/Fri 7:30 AM</span>
+                        <span>📍 Muscle Beach</span>
+                    </div>
+                    <div class="event-action">
+                        <button class="btn-local" onclick="displayModal('Boardwalk Run Club','Free run club. Meet at the south end of Muscle Beach. Strollers and dogs welcome.')">More Info</button>
+                    </div>
+                </div>
+
+                <!-- Event 7 -->
+                <div class="local-event-card">
+                    <span class="event-category">📚 Workshop</span>
+                    <h4>Timewarp Records Listening Party</h4>
+                    <div class="event-desc">Vinyl lovers gather to spin new releases and rare finds. BYO records or just come to listen. Snacks and drinks provided.</div>
+                    <div class="event-meta">
+                        <span>📅 Tue 7:00 PM</span>
+                        <span>📍 Timewarp Records</span>
+                    </div>
+                    <div class="event-action">
+                        <button class="btn-local" onclick="displayModal('Timewarp Records Listening Party','Weekly listening session. Free entry. Bring your favorite vinyl to share.')">More Info</button>
+                    </div>
+                </div>
+
+                <!-- Event 8 -->
+                <div class="local-event-card">
+                    <span class="event-category">🍽️ Food Pop‑up</span>
+                    <h4>Dogtown Brewing + Taco Truck</h4>
+                    <div class="event-desc">Every Friday evening, Dogtown Brewing hosts a rotating taco truck and live DJ. Perfect way to kick off the weekend.</div>
+                    <div class="event-meta">
+                        <span>📅 Fri 5:00–10:00</span>
+                        <span>📍 Dogtown Brewing</span>
+                    </div>
+                    <div class="event-action">
+                        <button class="btn-local" onclick="displayModal('Dogtown Brewing + Taco Truck','Weekly food truck residency. Check their social for the weekly vendor.')">More Info</button>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -2374,26 +2593,22 @@
     </script>
     <script>
         // ─── WEATHER WIDGET ───
-        // 🔑 Replace 'YOUR_API_KEY_HERE' with your actual OpenWeatherMap API key
         const API_KEY = 'd3aa08e6674a910b835872aa7b664946';
 
         async function fetchWeatherData(lat, lon) {
             try {
-                // Current weather
                 const currentRes = await fetch(
                     `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=imperial`
                 );
                 if (!currentRes.ok) throw new Error('Current weather API error');
                 const currentData = await currentRes.json();
 
-                // 5-day forecast (we'll pick the next 3 days)
                 const forecastRes = await fetch(
                     `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=imperial`
                 );
                 if (!forecastRes.ok) throw new Error('Forecast API error');
                 const forecastData = await forecastRes.json();
 
-                // Process forecast: group by day and pick noon (or first) reading
                 const dailyMap = {};
                 forecastData.list.forEach(item => {
                     const date = new Date(item.dt * 1000);
@@ -2406,16 +2621,9 @@
                         };
                     }
                     dailyMap[dayKey].temps.push(item.main.temp);
-                    // Use the last icon for the day (or we can pick by time)
                 });
-                const days = Object.values(dailyMap);
-                // We need today, tomorrow, day after tomorrow
-                const today = new Date().toDateString();
                 const forecastDays = [];
-                const dayKeys = Object.keys(dailyMap);
-                // Sort by timestamp
-                dayKeys.sort((a, b) => new Date(a) - new Date(b));
-                // Get today, tomorrow, next
+                const dayKeys = Object.keys(dailyMap).sort((a, b) => new Date(a) - new Date(b));
                 let count = 0;
                 for (let key of dayKeys) {
                     if (count >= 3) break;
@@ -2427,7 +2635,6 @@
                     });
                     count++;
                 }
-                // If we don't have 3 days, pad with fallback
                 while (forecastDays.length < 3) {
                     forecastDays.push({ temp: '--', icon: '01d' });
                 }
@@ -2447,7 +2654,6 @@
         }
 
         function getWeatherIcon(iconCode) {
-            // Map OpenWeatherMap icon codes to emoji
             const map = {
                 '01d': '☀️',
                 '01n': '🌙',
@@ -2473,7 +2679,6 @@
 
         function updateWeatherWidget(data) {
             if (!data) {
-                // Fallback static data
                 document.getElementById('weatherIcon').textContent = '🌊';
                 document.getElementById('weatherTemp').textContent = '72°F';
                 document.getElementById('weatherDesc').textContent = 'Coastal';
@@ -2489,8 +2694,6 @@
             document.getElementById('weatherTemp').textContent = `${current.temp}°F`;
             document.getElementById('weatherDesc').textContent = current.description;
 
-            // Update forecast
-            const days = ['Today', 'Tomorrow', 'Mon'];
             forecast.forEach((day, idx) => {
                 const icon = getWeatherIcon(day.icon);
                 const temp = day.temp !== '--' ? `${day.temp}°` : '--°';
@@ -2500,7 +2703,6 @@
         }
 
         function initWeather() {
-            // Try to get user location
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     async (position) => {
@@ -2509,7 +2711,6 @@
                         updateWeatherWidget(data);
                     },
                     async () => {
-                        // Fallback to Venice Beach, CA
                         const fallback = { lat: 33.9866, lon: -118.4717 };
                         const data = await fetchWeatherData(fallback.lat, fallback.lon);
                         updateWeatherWidget(data);
@@ -2517,7 +2718,6 @@
                     { timeout: 5000, enableHighAccuracy: true }
                 );
             } else {
-                // No geolocation support, fallback to Venice
                 (async () => {
                     const fallback = { lat: 33.9866, lon: -118.4717 };
                     const data = await fetchWeatherData(fallback.lat, fallback.lon);
@@ -2526,7 +2726,6 @@
             }
         }
 
-        // Initial weather load and refresh every 10 minutes
         initWeather();
         setInterval(initWeather, 600000);
 
@@ -2615,7 +2814,7 @@
         }, { threshold: 0.15 });
         document.querySelectorAll('.editorial-section').forEach(s => scrollObs.observe(s));
 
-        // Also observe the music section
+        // Music section observer
         const musicSection = document.querySelector('.music-section');
         if (musicSection) {
             const musicObserver = new IntersectionObserver(entries => {
@@ -2688,6 +2887,13 @@
             if (btn) { btn.textContent = 'Subscribed ✓';
                 btn.disabled = true;
                 btn.style.opacity = '0.65'; }
+        }
+
+        // ─── PWA service worker (optional, from GoSeeDo) ───
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
         }
     </script>
 </body>
